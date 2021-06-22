@@ -1,5 +1,6 @@
 from resizer import optimizeImage
 
 optimizeImage(
-    path=''
+    path = 'C:/Users/lfurtado/Desktop/fotos/',
+    basewidth = 200
 )
