@@ -22,7 +22,7 @@ class optimizeImage:
         im = Image.open(imagePath)
         img = self.resize(im=im)
         imagePath = self.path+'/'+filename
-        img.save(self.path+'/'+fileName)
+        img.save(self.path+'/'+fileName, 'jpeg')
 
     def execute(self,):
         for image in self.files:
