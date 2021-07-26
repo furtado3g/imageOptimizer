@@ -1,15 +1,15 @@
 from src.controller.resizer import optimizeImage
 from src.controller.zipGenerator import ZipFolder
+import os
 
-path = 'C:/Users/lfurtado/Desktop/fotos'
+path = '{dir}/images'.format(dir=os.getcwd())
 
 optimizeImage(
-    path='C:/Users/lfurtado/Desktop/fotos',
+    path=path,
     basewidth=175,
     type='Geral'
 )
 
-""" ZipFolder(
+ZipFolder(
     path=path
 )
- """

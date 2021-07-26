@@ -30,10 +30,9 @@ class optimizeImage:
         else :
             imagePath = self.path+'/'+filename+'.jpg'
             img.save(imagePath, 'jpeg', quality=50, optimize=True)
-        
-        if imagepath != self.path+'/'+fileName :
+        """ if imagePath != self.path+'/'+fileName :
             imagePath = self.path+'/'+fileName
-            remove(imagePath) 
+            remove(imagePath)  """
 
 
     def execute(self,):

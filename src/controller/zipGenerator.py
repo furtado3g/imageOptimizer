@@ -10,7 +10,8 @@ class ZipFolder:
         self.__main()
 
     def __compress(self):
-        zipf = zipfile.ZipFile('temp/fotos.zip', 'w', zipfile.ZIP_DEFLATED)
+        today  = date.today()
+        zipf = zipfile.ZipFile('temp/{day}{month}{year}.zip'.format(day="{0:0=2d}".format(today.day),month="{0:0=2d}".format(today.month),year=today.year), 'w', zipfile.ZIP_DEFLATED)
         self.__zipdir(self.path, zipf)
         zipf.close()
 
@@ -18,6 +19,8 @@ class ZipFolder:
         self.__compress()
 
     def __zipdir(self,path, ziph):
+        lenDirPath = len(path)
         for root, dirs, files in os.walk(path):
             for file in files:
-                ziph.write(os.path.join(root, file))
+                filePath = os.path.join(root, file)
+                ziph.write(filePath , filePath[lenDirPath :])
