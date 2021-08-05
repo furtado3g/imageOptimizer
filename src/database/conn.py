@@ -12,11 +12,21 @@ class connector:
             encoding='UTF-8',
             nencoding='UTF-8'
         )
-        self.cursor = self.conn.cursor()
+        self.conn.autocommit = False
         self.batch_size = 10000
+    
+    def initCursor(self):
+        return self.conn.cursor()
+
 
     def executeSimpleSql(self, sql):
-        return self.cursor.execute(sql)
+        cursor = self.initCursor() 
+        resp = cursor.execute(sql)
+        self.conn.commit()
+        return resp
 
     def executeManySql(self, sql, data):
-        return self.cursor.executemany(sql, data)
+        cursor = self.initCursor() 
+        cur = cursor.executemany(sql,data)
+        self.conn.commit()
+        return cur

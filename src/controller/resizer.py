@@ -10,7 +10,15 @@ class optimizeImage:
         self.basewidth = basewidth
         self.files = [f for f in listdir(path) if isfile(join(path, f))]
         self.type = type
-        self.execute()
+        self.carteirinhas = []
+        self.db = ExecuteSql()
+        self.saveToDb = False
+
+    def setType(self, pTpMatricula):
+        self.tpMatricula = pTpMatricula
+    
+    def setNrAnoSemeste(self, pNrAnoSemeste):
+        self.nrAnoSemeste = pNrAnoSemeste
 
     def resize(self, im):
         wpercent = (self.basewidth/float(im.size[0]))
@@ -18,23 +26,31 @@ class optimizeImage:
         return im.resize((self.basewidth, hsize), Image.ANTIALIAS)
 
     def imageManipulator(self, fileName):
-        imagePath = self.path+'/'+fileName
+        imagepath = self.path+'/'+fileName
         filename, fileType = fileName.split('.')
-        im = Image.open(imagePath)
+        im = Image.open(imagepath)
         img = self.resize(im=im)
         if self.type != 'Geral':
-            for row in ExecuteSql().realizarBusca(sqFuncionario=filename):
+            for row in self.db.realizarBusca(sqFuncionario=filename):
                 if row[0] == 'S':
-                    imagePath = self.path+'/'+row[1]+'.jpg'
-                    img.save(imagePath, 'jpeg', quality=50, optimize=True)
+                    imagepath = self.path+'/'+row[1]+'.jpg'
+                    img.save(imagepath, 'jpeg', quality=50, optimize=True)
         else :
-            imagePath = self.path+'/'+filename+'.jpg'
-            img.save(imagePath, 'jpeg', quality=50, optimize=True)
-        """ if imagePath != self.path+'/'+fileName :
-            imagePath = self.path+'/'+fileName
-            remove(imagePath)  """
-
+            filename = self.db.nomeAtualizado(filename) 
+            imagepath = self.path+'/'+filename+'.jpg'
+            img.save(imagepath, 'jpeg', quality=50, optimize=True)
+        if imagepath != self.path+'/'+fileName :
+            imagepath = self.path+'/'+fileName
+            remove(imagepath) 
 
     def execute(self,):
+        carteirinhas = []
+        resultado = []
         for image in self.files:
             self.imageManipulator(image)
+            filename, fileType = image.split('.')
+            filename = self.db.nomeAtualizado(filename)
+            carteirinhas.append((filename,self.tpMatricula,self.nrAnoSemeste,'I'))
+        if self.type == 'Lote' and self.saveToDb == True:
+            resultado = self.db.insere_lote(data=carteirinhas)
+        return resultado

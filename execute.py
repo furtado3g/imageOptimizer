@@ -4,11 +4,14 @@ import os
 
 path = '{dir}/images'.format(dir=os.getcwd())
 
-optimizeImage(
+optimizer = optimizeImage(
     path=path,
     basewidth=175,
     type='Geral'
 )
+optimizer.setNrAnoSemeste('20211')
+optimizer.setType('F')
+optimizer.execute()
 
 ZipFolder(
     path=path
